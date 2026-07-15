@@ -1,0 +1,43 @@
+/* Kill scrollbars inside tiles */
+.grid-stack-item-content,
+.dashboard-gs-generic-item,
+.dashboard-tile-app,
+.dashboard-gs-generic-item * {
+  overflow: hidden !important;
+}
+
+/* Remove the huge padding around tile content */
+.dashboard-gs-generic-item {
+  padding: 4px !important;
+}
+
+.dashboard-tile-app {
+  padding: 0 !important;
+  gap: 2px !important;
+  width: 100% !important;
+}
+
+/* Let the app title actually use the tile width */
+.dashboard-tile-app-title {
+  width: 100% !important;
+  max-width: 100% !important;
+  padding: 0 2px !important;
+  margin: 0 !important;
+  text-align: center !important;
+  white-space: normal !important;
+  overflow-wrap: break-word !important;
+  line-height: 1.1 !important;
+}
+
+/* The inner button wrapper that constrains width */
+.dashboard-tile-app > .mantine-UnstyledButton-root {
+  width: 100% !important;
+  padding: 0 !important;
+}
+
+/* Soma padding around icons */
+css.dashboard-tile-app .mantine-Image-root,
+.dashboard-tile-app img {
+  padding: 6px !important;
+  box-sizing: border-box !important;
+}
