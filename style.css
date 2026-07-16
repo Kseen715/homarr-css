@@ -2,27 +2,96 @@
 
 .grid-stack-item-content {
   position: absolute !important;
-  top: 5px !important;
-  right: 5px !important;
-  bottom: 5px !important;
-  left: 5px !important;
+  inset: 5px !important;
   width: auto !important;
   height: auto !important;
   box-sizing: border-box !important;
 }
 
-/* ============ TILES ============ */
+/* ============ LIQUID GLASS (frosted) ============ */
 
-.dashboard-gs-generic-item {
+.grid-stack-item-content:not(.iframe-wrapper) {
+  /* --- крутилки --- */
+  --opacity: 0.50 !important;   /* сколько родного цвета тайла видно (было 0.75) */
+  --glass-blur: 22px;           /* сила размытия — это и есть матовость */
+  --glass-sheen: 0.06;          /* блик сверху; 0 = чистое стекло */
+  --glass-edge: 0.16;           /* яркость кромки */
+
+  backdrop-filter: blur(var(--glass-blur)) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(150%) !important;
+
+  border: 1px solid rgba(255, 255, 255, var(--glass-edge)) !important;
+  border-radius: 18px !important;
   overflow: hidden !important;
-  padding: 6px !important;
-  display: flex !important;
-  flex-direction: column !important;
-  box-sizing: border-box !important;
+
+  box-shadow:
+    0 8px 26px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14) !important;
 }
 
-.dashboard-tile-app {
-  padding: 0 !important;
+/* блик сверху-слева */
+.grid-stack-item-content:not(.iframe-wrapper)::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(72% 50% at 20% 0%, rgba(255, 255, 255, var(--glass-sheen)), transparent 68%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* преломляющая кромка */
+.grid-stack-item-content:not(.iframe-wrapper)::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    140deg,
+    rgba(255, 255, 255, 0.32) 0%,
+    rgba(255, 255, 255, 0.02) 32%,
+    rgba(255, 255, 255, 0) 55%,
+    rgba(255, 255, 255, 0.14) 100%
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.grid-stack-item-content:not(.iframe-wrapper):hover {
+  --opacity: 0.55 !important;
+  --glass-edge: 0.26;
+  backdrop-filter: blur(26px) saturate(165%) !important;
+  -webkit-backdrop-filter: blur(26px) saturate(165%) !important;
+  box-shadow:
+    0 12px 32px rgba(0, 0, 0, 0.36),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22) !important;
+}
+
+/* светлая тема */
+[data-mantine-color-scheme="light"] .grid-stack-item-content:not(.iframe-wrapper) {
+  --opacity: 0.5 !important;
+  --glass-edge: 0.50;
+  --glass-sheen: 0.16;
+  box-shadow:
+    0 8px 26px rgba(0, 0, 0, 0.10),
+    inset 0 1px 0 rgba(255, 255, 255, 0.55) !important;
+}
+
+/* ============ TILE CONTENT ============ */
+
+.app-wrapper > a,
+.app-wrapper > .mantine-UnstyledButton-root {
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+.app-flex-wrapper {
+  padding: 6px !important;
   gap: 4px !important;
   width: 100% !important;
   height: 100% !important;
@@ -36,108 +105,83 @@
 
 /* ============ TITLE ============ */
 
-.dashboard-tile-app-title {
+.app-flex-wrapper > .mantine-Stack-root {
+  width: 100% !important;
+  max-width: 100% !important;
+  flex: 0 0 auto !important;
+  min-height: 0 !important;
+}
+
+.app-title {
   width: 100% !important;
   max-width: 100% !important;
   padding: 0 2px !important;
   margin: 0 !important;
-  flex: 0 0 auto !important;
-  order: -1 !important;
   text-align: center !important;
   white-space: normal !important;
   overflow-wrap: break-word !important;
   text-overflow: clip !important;
   -webkit-line-clamp: unset !important;
   line-height: 1.15 !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45) !important;
 }
 
-/* ============ ЦЕПОЧКА ДО КАРТИНКИ ============ */
+/* ============ ICON — без зума на ховере ============ */
 
-.dashboard-tile-app > .mantine-UnstyledButton-root {
-  width: 100% !important;
-  padding: 0 !important;
+.app-icon,
+.app-flex-wrapper:hover > .app-icon,
+.app-wrapper img.normal-image {
   flex: 1 1 0 !important;
-  min-height: 0 !important;
-  height: 0 !important;
-  overflow: hidden !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-}
-
-.dashboard-tile-app .mantine-Indicator-root {
-  position: relative !important;
   width: 100% !important;
   height: 100% !important;
-  min-height: 0 !important;
-  flex: 1 1 0 !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  overflow: visible !important;
-}
-
-/* ============ ICON ============ */
-
-.dashboard-tile-app .mantine-Image-root,
-.dashboard-tile-app .mantine-Image-figure,
-.dashboard-tile-app .mantine-Image-imageWrapper {
-  width: 100% !important;
-  height: 100% !important;
-  min-height: 0 !important;
   min-width: 0 !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  overflow: visible !important;
-}
-
-.dashboard-tile-app img {
-  padding: 4px !important;
-  box-sizing: border-box !important;
-  width: 100% !important;
-  height: 100% !important;
+  min-height: 0 !important;
   max-width: 100% !important;
   max-height: 100% !important;
-  min-width: 0 !important;
-  min-height: 0 !important;
+  padding: 4px !important;
+  box-sizing: border-box !important;
   object-fit: contain !important;
   object-position: center !important;
+  scale: 1 !important;
+  transform: none !important;
+  transition: none !important;
 }
 
-/* ============ PING INDICATOR — оригинал + белая рамка ============ */
+/* ============ PING INDICATOR — белая рамка ============ */
 
-.dashboard-gs-generic-item .mantine-Indicator-indicator {
+.app-wrapper div[style*="border-radius: 100%"],
+.app-wrapper div[style*="border-radius:100%"] {
   border: 2px solid #fff !important;
   box-sizing: content-box !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.55) !important;
 }
 
-/* ============ ПУЛЬСАЦИЯ ВЫКЛ ============ */
+/* ============ DOWNLOADS (qBittorrent) — стекло ============ */
 
-.dashboard-gs-generic-item .mantine-Indicator-root {
-  transform: none !important;
+.downloads-wrapper {
+  --mrt-base-background-color: transparent !important;
+  --mrt-striped-row-background-color: transparent !important;
+  --mrt-pinned-row-background-color: transparent !important;
+  --mrt-pinned-column-background-color: transparent !important;
+  --mrt-row-hover-background-color: rgba(255, 255, 255, 0.08) !important;
+  --mrt-striped-row-hover-background-color: rgba(255, 255, 255, 0.08) !important;
 }
 
-.dashboard-gs-generic-item div:has(> .mantine-Indicator-root) {
-  transform: scale(0.75) !important;
-  transform-origin: bottom right !important;
+.downloads-wrapper .mrt-table-paper,
+.downloads-wrapper .mrt-table-container,
+.downloads-wrapper .mantine-Table-table,
+.downloads-wrapper thead,
+.downloads-wrapper tbody,
+.downloads-wrapper tfoot,
+.downloads-wrapper tr,
+.downloads-wrapper td {
+  background-color: transparent !important;
+  background-image: none !important;
 }
 
-.dashboard-gs-generic-item .mantine-Indicator-processing,
-.mantine-Indicator-processing {
-  display: none !important;
-  animation: none !important;
-}
-
-/* ============ ХОВЕР — без увеличения иконки ============ */
-
-.dashboard-tile-app img,
-.dashboard-tile-app .mantine-Image-root,
-.dashboard-tile-app .mantine-Image-figure,
-.dashboard-tile-app .mantine-Image-imageWrapper,
-.dashboard-gs-generic-item img,
-.dashboard-gs-generic-item .mantine-Image-root {
-  transform: none !important;
-  scale: none !important;
-  transition: none !important;
+/* липкая шапка: не прозрачная насквозь, иначе строки просвечивают под ней */
+.downloads-wrapper thead th {
+  background-color: var(--background-color) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
 }
