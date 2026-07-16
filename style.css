@@ -185,3 +185,35 @@
   backdrop-filter: blur(12px) !important;
   -webkit-backdrop-filter: blur(12px) !important;
 }
+
+/* ============ HEADER — стекло ============ */
+
+.mantine-AppShell-header {
+  --header-opacity: 0.30;   /* сколько родного цвета шапки видно */
+  --header-blur: 22px;
+
+  background-color: rgb(from var(--mantine-color-body) r g b / var(--header-opacity)) !important;
+  backdrop-filter: blur(var(--header-blur)) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(var(--header-blur)) saturate(150%) !important;
+
+  --app-shell-border-color: rgba(255, 255, 255, 0.14) !important;
+  box-shadow:
+    0 4px 20px rgba(0, 0, 0, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
+}
+
+[data-mantine-color-scheme="light"] .mantine-AppShell-header {
+  --header-opacity: 0.38;
+  --app-shell-border-color: rgba(255, 255, 255, 0.50) !important;
+  box-shadow:
+    0 4px 20px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.55) !important;
+}
+
+/* ============ HEADER — центровка аватара ============ */
+
+.mantine-AppShell-header [data-tour-target="board-user-menu"],
+.mantine-AppShell-header [data-tour-target="board-user-menu"] > button {
+  display: flex !important;
+  align-items: center !important;
+}
