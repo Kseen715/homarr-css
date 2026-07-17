@@ -1,36 +1,36 @@
 # homarr-css
 
-Кастомная тема оформления для дашборда [Homarr](https://homarr.dev) - «жидкое стекло» (liquid / frosted glass): матовые полупрозрачные плитки и шапка с размытием фона, аккуратной кромкой и бликами, аккуратная типографика заголовков и адаптация под светлую/тёмную темы.
+A custom theme for the [Homarr](https://homarr.dev) dashboard - "liquid / frosted glass": matte translucent tiles and header with a blurred background, a crisp edge and highlights, tidy title typography, and adaptation to light/dark themes.
 
-Протестировано на Homarr `v1.71.0`.
+Tested on Homarr `v1.71.0`.
 
 <img src="image/README/style-dark.png" alt="style-dark" width="1600"/>
 
 <img src="image/README/style-light.png" alt="style-light" width="1600"/>
 
-## Что делает тема
+## What the theme does
 
-- **Матовое стекло** на всех плитках и на шапке (`backdrop-filter: blur`) - сквозь них просвечивает и размывается фон доски.
-- **Единый визуальный язык:** скруглённые углы, тонкая светлая кромка, мягкая тень, лёгкий блик сверху-слева, подсветка при наведении.
-- **Порядок в содержимом плиток:** иконки не «прыгают» на hover, длинные названия переносятся, а не обрезаются.
-- **Поддержка светлой и тёмной темы** (через атрибут `data-mantine-color-scheme`).
-- **Обход бага Chromium** с полосой-призраком под шапкой (см. ниже).
+- **Frosted glass** on all tiles and on the header (`backdrop-filter: blur`) - the board's background shows through and is blurred behind them.
+- **A unified visual language:** rounded corners, a thin light edge, a soft shadow, a subtle top-left highlight, and a hover glow.
+- **Order in tile content:** icons don't "jump" on hover, and long titles wrap instead of being clipped.
+- **Light and dark theme support** (via the `data-mantine-color-scheme` attribute).
+- **A workaround for a Chromium bug** with a ghost strip under the header (see below).
 
-## Установка
+## Installation
 
-Homarr → **Manage → Settings → Customization → Custom CSS** (или соответствующий раздел кастомного CSS в вашей версии), вставить содержимое [`style.css`](style.css) и сохранить.
+Homarr → **Manage → Settings → Customization → Custom CSS** (or the corresponding custom-CSS section in your version), paste the contents of [`style.css`](style.css), and save.
 
-Тема опирается на классы Mantine/Homarr (`.mantine-AppShell-*`, `.grid-stack-item-content`, `.app-*` и т.п.). При крупном обновлении Homarr классы или CSS-хэши могут измениться - тогда правила нужно сверить.
+The theme relies on Mantine/Homarr classes (`.mantine-AppShell-*`, `.grid-stack-item-content`, `.app-*`, etc.). A major Homarr update may change the classes or CSS hashes - in that case the rules need to be re-checked.
 
-## Известный баг Chromium: полоса-призрак под шапкой
+## Known Chromium bug: ghost strip under the header
 
-**Симптом.** На узких экранах (< ~530px) под нижней кромкой шапки появлялась полупрозрачная горизонтальная полоса («два слоя стекла»), заметная при движении курсора/hover и пропадавшая в режиме инспектора DevTools.
+**Symptom.** On narrow screens (< ~530px), a translucent horizontal strip ("two layers of glass") appeared under the header's bottom edge, visible when moving the cursor / on hover, and disappearing in DevTools inspector mode.
 
-**Причина.** Баг композитора Chromium: `backdrop-filter` плиток рисует полупрозрачный **дубликат нижней кромки закреплённой (`position: fixed`) шапки**. Призрак «фонит» лишь на ~10px ниже кромки шапки - то есть проблема проявляется, только пока верхний ряд стеклянных плиток стоит вплотную к шапке.
+**Cause.** A Chromium compositor bug: the tiles' `backdrop-filter` draws a translucent **duplicate of the bottom edge of the fixed (`position: fixed`) header**. The ghost only "bleeds" about ~10px below the header edge - so the problem only shows up while the top row of glass tiles sits flush against the header.
 
-**Что НЕ помогло** (проверено, не тратьте время): `isolation: isolate`, `clip-path`, `contain: paint`, `translateZ`/`will-change` на шапке/плитках/`main`, уменьшение `blur`. `html { transform: translateZ(0) }` полосу убирает, но ломает фиксацию шапки (она уезжает при скролле). `position: sticky` на шапке помогает только за счёт появления большого зазора.
+**What did NOT help** (verified, don't waste your time): `isolation: isolate`, `clip-path`, `contain: paint`, `translateZ`/`will-change` on the header/tiles/`main`, reducing `blur`. `html { transform: translateZ(0) }` removes the strip but breaks the header pinning (it scrolls away). `position: sticky` on the header only helps at the cost of a large gap appearing.
 
-**Решение.** Немного увеличить верхний отступ контента, чтобы верхний ряд плиток вышел из зоны артефакта (стекло и позицию шапки не трогаем):
+**Solution.** Slightly increase the top padding of the content so the top row of tiles moves out of the artifact zone (leaving the glass and the header position untouched):
 
 ```css
 .mantine-AppShell-main {
@@ -40,4 +40,4 @@ Homarr → **Manage → Settings → Customization → Custom CSS** (или со
 }
 ```
 
-Штатный отступ ≈ 76px (высота шапки 60 + padding 16); `+10px` - минимально подобранное значение, при котором полосы уже нет.
+The default padding is ≈ 76px (header height 60 + padding 16); `+10px` is the minimum value at which the strip is already gone.
