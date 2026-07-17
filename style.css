@@ -74,7 +74,7 @@
 
 /* светлая тема */
 [data-mantine-color-scheme="light"] .grid-stack-item-content:not(.iframe-wrapper) {
-  --opacity: 0.5 !important;
+  --opacity: 0.25 !important;
   --glass-edge: 0.50;
   --glass-sheen: 0.16;
   box-shadow:
@@ -210,10 +210,32 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.55) !important;
 }
 
+/* ============ HEADER — тёмные кнопки в светлой теме ============ */
+/* иконки-кнопки справа в шапке (карандаш, шестерёнка, replace, поиск)
+   в светлой теме серые и плохо читаются на стекле — делаем их тёмными */
+[data-mantine-color-scheme="light"] .mantine-AppShell-header .mantine-ActionIcon-root {
+  --ai-color: var(--mantine-color-dark-8) !important;
+  --ai-hover: rgba(0, 0, 0, 0.08) !important;
+  color: var(--mantine-color-dark-8) !important;
+}
+
 /* ============ HEADER — центровка аватара ============ */
 
 .mantine-AppShell-header [data-tour-target="board-user-menu"],
 .mantine-AppShell-header [data-tour-target="board-user-menu"] > button {
   display: flex !important;
   align-items: center !important;
+}
+
+/* ============ FIX: полоса-призрак под шапкой (баг Chromium) ============ */
+/* backdrop-filter плиток рисует полупрозрачный дубликат нижней кромки
+   фиксированной шапки — «два слоя стекла» под её краем (заметно при
+   hover/движении курсора, особенно на узких экранах < ~530px). Призрак
+   «фонит» только на ~10px ниже шапки, поэтому чуть увеличиваем отступ
+   верхнего ряда плиток, чтобы он вышел из зоны артефакта. Стекло и шапку
+   не трогаем. Штатный отступ = header-offset + padding (≈76px), +10px. */
+.mantine-AppShell-main {
+  padding-top: calc(
+    var(--app-shell-header-offset) + var(--app-shell-padding) + 10px
+  ) !important;
 }
